@@ -248,7 +248,7 @@ int WINRT_VideoInit(SDL_VideoDevice *_this)
     return 0;
 }
 
-extern "C" Uint32 D3D11_DXGIFormatToSDLPixelFormat(DXGI_FORMAT dxgiFormat);
+extern "C" Uint32 D3D12_DXGIFormatToSDLPixelFormat(DXGI_FORMAT dxgiFormat);
 
 static void WINRT_DXGIModeToSDLDisplayMode(const DXGI_MODE_DESC *dxgiMode, SDL_DisplayMode *sdlMode)
 {
@@ -256,7 +256,7 @@ static void WINRT_DXGIModeToSDLDisplayMode(const DXGI_MODE_DESC *dxgiMode, SDL_D
     sdlMode->w = dxgiMode->Width;
     sdlMode->h = dxgiMode->Height;
     sdlMode->refresh_rate = (((100 * dxgiMode->RefreshRate.Numerator) / dxgiMode->RefreshRate.Denominator) / 100.0f);
-    sdlMode->format = D3D11_DXGIFormatToSDLPixelFormat(dxgiMode->Format);
+    sdlMode->format = D3D12_DXGIFormatToSDLPixelFormat(dxgiMode->Format);
 }
 
 static int WINRT_AddDisplaysForOutput(SDL_VideoDevice *_this, IDXGIAdapter1 *dxgiAdapter1, int outputIndex)

@@ -59,11 +59,11 @@ extern "C" {
 #include "SDL_winrtapp_common.h"
 #include "SDL_winrtapp_direct3d.h"
 
-#if defined(SDL_VIDEO_RENDER_D3D11) && !defined(SDL_RENDER_DISABLED)
+#if defined(SDL_VIDEO_RENDER_D3D12) && !defined(SDL_RENDER_DISABLED)
 /* Calling IDXGIDevice3::Trim on the active Direct3D 11.x device is necessary
  * when Windows 8.1 apps are about to get suspended.
  */
-extern "C" void D3D11_Trim(SDL_Renderer *);
+//extern "C" void D3D12_Trim(SDL_Renderer *);
 #endif
 
 // Compile-time debugging options:
@@ -618,11 +618,11 @@ void SDL_WinRTApp::OnSuspending(Platform::Object ^ sender, SuspendingEventArgs ^
         // Let the Direct3D 11 renderer prepare for the app to be backgrounded.
         // This is necessary for Windows 8.1, possibly elsewhere in the future.
         // More details at: http://msdn.microsoft.com/en-us/library/windows/apps/Hh994929.aspx
-#if defined(SDL_VIDEO_RENDER_D3D11) && !defined(SDL_RENDER_DISABLED)
+#if defined(SDL_VIDEO_RENDER_D3D12) && !defined(SDL_RENDER_DISABLED)
         if (WINRT_GlobalSDLWindow) {
             SDL_Renderer *renderer = SDL_GetRenderer(WINRT_GlobalSDLWindow);
-            if (renderer && (SDL_strcmp(renderer->info.name, "direct3d11") == 0)) {
-                D3D11_Trim(renderer);
+            if (renderer && (SDL_strcmp(renderer->info.name, "direct3d12") == 0)) {
+                //D3D12_Trim(renderer);
             }
         }
 #endif

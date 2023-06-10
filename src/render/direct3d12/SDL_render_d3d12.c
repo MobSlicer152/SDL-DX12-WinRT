@@ -28,7 +28,6 @@
 #define SDL_D3D12_NUM_UPLOAD_BUFFERS 32
 
 #include "../../core/windows/SDL_windows.h"
-#include "../../video/windows/SDL_windowswindow.h"
 #include "../SDL_sysrender.h"
 #include "../SDL_d3dmath.h"
 
@@ -284,7 +283,7 @@ Uint32 D3D12_DXGIFormatToSDLPixelFormat(DXGI_FORMAT dxgiFormat)
     }
 }
 
-static DXGI_FORMAT SDLPixelFormatToDXGIFormat(Uint32 sdlFormat)
+DXGI_FORMAT D3D12_SDLPixelFormatToDXGIFormat(Uint32 sdlFormat)
 {
     switch (sdlFormat) {
     case SDL_PIXELFORMAT_ARGB8888:
@@ -1162,19 +1161,18 @@ static HRESULT D3D12_CreateSwapChain(SDL_Renderer *renderer, int w, int h)
         goto done;
     }
 
-    result = D3D_CALL(data->dxgiFactory, CreateSwapChainForHwnd,
+    result = D3D_CALL(data->dxgiFactory, CreateSwapChainForCoreWindow,
                       (IUnknown *)data->commandQueue,
-                      windowinfo.info.win.window,
+                      (IUnknown *)windowinfo.info.winrt.window,
                       &swapChainDesc,
                       NULL,
-                      NULL, /* Allow on all displays. */
                       &swapChain);
     if (FAILED(result)) {
         WIN_SetErrorFromHRESULT(SDL_COMPOSE_ERROR("IDXGIFactory2::CreateSwapChainForHwnd"), result);
         goto done;
     }
 
-    D3D_CALL(data->dxgiFactory, MakeWindowAssociation, windowinfo.info.win.window, DXGI_MWA_NO_WINDOW_CHANGES);
+    //D3D_CALL(data->dxgiFactory, MakeWindowAssociation, windowinfo.info.win.window, DXGI_MWA_NO_WINDOW_CHANGES);
 
     result = D3D_CALL(swapChain, QueryInterface, D3D_GUID(SDL_IID_IDXGISwapChain4), (void **)&data->swapChain);
     if (FAILED(result)) {
@@ -1417,7 +1415,7 @@ static int D3D12_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
     D3D12_RenderData *rendererData = (D3D12_RenderData *)renderer->driverdata;
     D3D12_TextureData *textureData;
     HRESULT result;
-    DXGI_FORMAT textureFormat = SDLPixelFormatToDXGIFormat(texture->format);
+    DXGI_FORMAT textureFormat = D3D12_SDLPixelFormatToDXGIFormat(texture->format);
     D3D12_RESOURCE_DESC textureDesc;
     D3D12_HEAP_PROPERTIES heapProps;
     D3D12_SHADER_RESOURCE_VIEW_DESC resourceViewDesc;

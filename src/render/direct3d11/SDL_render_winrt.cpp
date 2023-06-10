@@ -20,7 +20,7 @@
 */
 #include "SDL_internal.h"
 
-#if defined(SDL_VIDEO_RENDER_D3D11) && !defined(SDL_RENDER_DISABLED)
+#if defined(SDL_VIDEO_RENDER_D3D12) && !defined(SDL_RENDER_DISABLED)
 
 #include "../../video/winrt/SDL_winrtvideo_cpp.h"
 extern "C" {
@@ -44,7 +44,7 @@ using namespace Windows::Graphics::Display;
 #include "SDL_render_winrt.h"
 
 extern "C" void *
-D3D11_GetCoreWindowFromSDLRenderer(SDL_Renderer *renderer)
+D3D12_GetCoreWindowFromSDLRenderer(SDL_Renderer *renderer)
 {
     SDL_Window *sdlWindow = renderer->window;
     if (renderer->window == NULL) {
@@ -79,7 +79,7 @@ D3D11_GetCoreWindowFromSDLRenderer(SDL_Renderer *renderer)
 }
 
 extern "C" DXGI_MODE_ROTATION
-D3D11_GetCurrentRotation()
+D3D12_GetCurrentRotation()
 {
     const DisplayOrientations currentOrientation = WINRT_DISPLAY_PROPERTY(CurrentOrientation);
 
